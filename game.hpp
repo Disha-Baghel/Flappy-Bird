@@ -20,10 +20,10 @@ class Game{
 		void update();
 		void draw_bird();
 		void draw_pipes();
-		void is_gameOver();
+		bool is_gameOver();
 		void handle_pipes();
 		PipePair generate_pipe_pair();
 		void event_handler();
 		void error_quit(std::string message);
-}
+};
 #endif
