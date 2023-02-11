@@ -5,6 +5,8 @@
 #include<deque>
 #include<SDL2/SDL.h>
 
+typedef std::pair<SDL_Rect, SDL_Rect> PipePair;
+
 class Game{
 	public:
 		Game();

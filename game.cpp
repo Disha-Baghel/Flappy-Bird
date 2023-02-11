@@ -40,7 +40,8 @@ Game::Game()
 		error_quit("renderer init");
 	}
 	running = true;
-	for(int i=0; i<640+100; i+=50){
+	for (int i = 0; i < 640 + 100; i += 50)
+	{
 		PipePair ppair = generate_pipe_pair();
 		ppair.first.x = i;
 		ppair.second.y = i;
@@ -50,41 +51,143 @@ Game::Game()
 	bird.h = BIRD_H;
 	bird.w = BIRD_W;
 	bird.x = 0;
-	bird.y = pipes.front().h +10;
+	bird.y = pipes.front().h + 10;
 }
 
-void Game::run(){
-	while(running){
+void Game::run()
+{
+	while (running)
+	{
 		SDL_Delay(10);
 		event_handler();
 		update();
-		if(is_gameOver()){
+		if (is_gameOver())
+		{
 			running = false;
 		}
 	}
 }
 
-Game::~Game(){
-	if(renderer != NULL){
+Game::~Game()
+{
+	if (renderer != NULL)
+	{
 		SDL_DestroyRenderer(renderer);
 	}
-	if(window != NULL){
+	if (window != NULL)
+	{
 		SDL_DestroyWindow(window);
 	}
-	if(SDL_WasInit(SDL_INIT_VIDEO)){
+	if (SDL_WasInit(SDL_INIT_VIDEO))
+	{
 		SDL_Quit();
 	}
 }
 
-void Game::update(){
+void Game::update()
+{
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	handle_pipes();
 	draw_pipes();
 	draw_bird();
 	bird.y += BIRD_FALL;
-	for(std::deque<SDL_Rect>::iterator it = pipes.begin(); it!=pipes.end(); it++){
+	for (std::deque<SDL_Rect>::iterator it = pipes.begin(); it != pipes.end(); it++)
+	{
 		it->x -= 1;
 	}
 	SDL_RenderPresent(renderer);
+}
+
+void Game::draw_bird()
+{
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderFillRect(renderer, &bird);
+}
+
+void Game::draw_pipes()
+{
+	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+	for (SDL_Rect p : pipes)
+	{
+		SDL_RenderFillRect(renderer, &p);
+	}
+}
+
+bool Game::is_gameOver()
+{
+	for (SDL_Rect p : pipes)
+	{
+		if (SDL_HasIntersection(&p, &bird) == SDL_TRUE)
+		{
+			return true;
+		}
+	}
+	if (bird.y + bird.w >= 480)
+	{
+		return true;
+	}
+	return false;
+}
+
+void Game::handle_pipes()
+{
+	if (pipes.front().x + pipes.front().w > 0)
+	{
+		return;
+	}
+	pipes.pop_front();
+	pipes.pop_front();
+	PipePair pipe_pair = generate_pipe_pair();
+	pipes.push_back(pipe_pair.first);
+	pipes.push_back(pipe_pair.second);
+}
+
+#define PIPE_GAP 250
+
+PipePair Game::generate_pipe_pair()
+{
+	PipePair ppair;
+
+	ppair.first.h = rand() % 150 + 140;
+	ppair.second.y = ppair.first.h + PIPE_GAP;
+
+	ppair.first.x = 610;
+	ppair.first.y = 0;
+	ppair.first.w = PIPE_W;
+	ppair.second.x = 610;
+	ppair.second.w = PIPE_W;
+	ppair.second.h = 490 - ppair.second.y;
+	return ppair;
+}
+
+void Game::event_handler()
+{
+	SDL_Event e;
+	while (SDL_PollEvent(&e))
+	{
+		switch (e.type)
+		{
+		case SDL_QUIT:
+			running = false;
+			break;
+
+		case SDL_KEYDOWN:
+			switch (e.key.keysym.sym)
+			{
+			case SDLK_SPACE:
+				if (bird.y + bird.h > 0)
+				{
+					bird.y -= BIRD_JUMP;
+				}
+				break;
+			}
+			break;
+		}
+	}
+}
+
+void Game::error_quit(std::string msg){
+	std::cerr << "ERROR: "<<msg <<std::endl;
+	exit(1);
 }
