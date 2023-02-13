@@ -1,2 +1,2 @@
 # Flappy-Bird
-The Flappy bird game using C++ and SDL2 library
+The Flappy Bird game using C++ and SDL2 library
