@@ -173,9 +173,8 @@ void Game::event_handler()
 			break;
 
 		case SDL_KEYDOWN:
-			switch (e.key.keysym.sym)
-			{
-			case SDLK_SPACE:
+			switch (e.key.keysym.sym){
+			case SDLK_UP:
 				if (bird.y + bird.h > 0)
 				{
 					bird.y -= BIRD_JUMP;
