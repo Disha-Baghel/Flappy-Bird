@@ -86,7 +86,7 @@ Game::~Game()
 
 void Game::update()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 135, 251, 1);
 	SDL_RenderClear(renderer);
 	handle_pipes();
 	draw_pipes();
@@ -101,13 +101,13 @@ void Game::update()
 
 void Game::draw_bird()
 {
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 179, 211, 23, 1);
 	SDL_RenderFillRect(renderer, &bird);
 }
 
 void Game::draw_pipes()
 {
-	SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 180, 0, 1);
 	for (SDL_Rect p : pipes)
 	{
 		SDL_RenderFillRect(renderer, &p);
