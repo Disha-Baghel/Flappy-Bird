@@ -40,7 +40,7 @@ Game::Game()
 		error_quit("renderer init");
 	}
 	running = true;
-	for (int i = 0; i < 640 + 100; i += 50)
+	for (int i = 0; i < 640 + 50; i += 50)
 	{
 		PipePair ppair = generate_pipe_pair();
 		ppair.first.x = i;
@@ -143,13 +143,12 @@ void Game::handle_pipes()
 	pipes.push_back(pipe_pair.second);
 }
 
-#define PIPE_GAP 250
-
+#define PIPE_GAP 200
 PipePair Game::generate_pipe_pair()
 {
 	PipePair ppair;
 
-	ppair.first.h = rand() % 150 + 140;
+	ppair.first.h = rand() % 150;
 	ppair.second.y = ppair.first.h + PIPE_GAP;
 
 	ppair.first.x = 610;
